@@ -31,11 +31,11 @@ class Sensor:
 
     @property
     def name(self) -> str | None:
-        """UTF-8 string for the name of a load defined by the user.
+        """UTF-8 string for the name of a sensor defined by the installer.
 
-        (e.g. ceiling spots, chandeliers, window west, floor lamp)
+        (e.g. Living Room Thermostat, Bathroom Temperature)
         """
-        return self.raw_data["name"]
+        return self.raw_data.get("displayed_name")
 
     @property
     def value(self) -> float | bool | None:
@@ -62,5 +62,18 @@ class Sensor:
 
     @property
     def channel(self) -> int:
-        """Channel of the load."""
+        """Channel of the sensor."""
         return self.raw_data["channel"]
+
+    @property
+    def room(self) -> str | None:
+        """Room name."""
+        return self.raw_data.get("room")
+
+    @property
+    def internal_name(self) -> str | None:
+        """Internal sensor name.
+
+        (e.g. Room Sensor (0002bc60_0)
+        """
+        return self.raw_data.get("name")

@@ -35,7 +35,7 @@ def validate_data_valid() -> list[dict]:
             "rain_sensor",
             "rain_sensor_with_history",
             "temperature_sensor",
-            "temperature_sensor_with_history",
+            "temperature_sensor_with_history_and_room",
             "wind_sensor",
             "wind_sensor_with_history",
         ],
@@ -108,6 +108,7 @@ async def test_async_get_sensors(
     assert actual[6].channel == 0
     assert isinstance(actual[6].value_temperature, float)
     assert actual[6].type == SENSOR_TYPE_TEMPERATURE
+    assert actual[6].room is None
 
     # Temperature with history
     assert len(actual[7].history) == 3
@@ -116,6 +117,8 @@ async def test_async_get_sensors(
     )
     assert actual[7].unit == UNIT_TEMPERATURE_CELSIUS
     assert actual[7].sub_type is None
+    assert actual[7].room == "Living Room"
+    assert actual[7].name == "Room Temperature"
 
     # Wind
     assert isinstance(actual[8], Wind)
@@ -150,6 +153,8 @@ async def test_async_get_sensor(client_api_auth, mock_aioresponse, data, expecte
 
     assert isinstance(actual, Sensor)
     assert isinstance(actual.id, int)
-    assert actual.name == "Room Sensor (0002bc61_0)"
+    assert actual.internal_name == "Room Sensor (0002bc61_0)"
     assert actual.device == "0002bc61"
+    assert actual.room is None
+    assert actual.name is None
     assert actual.unit == expected_unit
